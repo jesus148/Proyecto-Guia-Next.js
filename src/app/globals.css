@@ -1,6 +1,16 @@
 @import "tailwindcss";
 
-:root {
+
+
+
+/* tag body tendra estilos de tailwind */
+body{
+  @apply bg-gray-950 text-white;
+}
+
+
+/* comentar esto */
+/* :root {
   --background: #ffffff;
   --foreground: #171717;
 }
@@ -23,4 +33,4 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-}
+} */

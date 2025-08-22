@@ -1,0 +1,28 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+
+
+
+// clase modelo
+model Task{
+  // llave primaria , 
+  id Int @id @default(autoincrement())  //obigatorio y por default
+  title String //obligatorio
+  // ? es opcional , los q no llevan esto seran obligatorios
+  description String?
+  // campo fecha
+  createAt DateTime @default(now())  //obigatorio y por default
+
+}

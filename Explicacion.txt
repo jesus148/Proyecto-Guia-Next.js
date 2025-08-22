@@ -1,0 +1,153 @@
+
+
+1. 
+
+C:\Users\jesus\Desktop\JESUS\NEXT.JS\FAZT\9>npx create-next-app nextjs-prisma-crud
+√ Would you like to use TypeScript? ... No / Yes ----poner no
+√ Would you like to use ESLint? ... No / Yes   ----poner si
+√ Would you like to use Tailwind CSS? ... No / Yes   ----poner si
+√ Would you like your code inside a `src/` directory? ... No / Yes   ----poner si
+√ Would you like to use App Router? (recommended) ... No / Yes   ----poner si
+√ Would you like to use Turbopack for `next dev`? ... No / Yes   ----poner si
+√ Would you like to customize the import alias (`@/*` by default)? ... No / Yes  ---poner no
+
+
+
+
+
+2. 
+ 
+
+ ========
+ documentacion : https://www.prisma.io/docs/guides/nextjs
+ (se actualiza con el tiempo)
+
+
+=========
+ usando prisma junto con sqlite (en este caso lo usamos asi pero en la documentacion se actualiza de otra forma)
+ sqlite : recordar es una bd embebida osea no nesecita servidor va dentro de tu proyecto , es para app pequeñas y es relacional.
+
+  > 1----
+ PS C:\Users\jesus\Desktop\JESUS\NEXT.JS\FAZT\9\nextjs-prisma-crud> npm i prisma -D
+
+ PS C:\Users\jesus\Desktop\JESUS\NEXT.JS\FAZT\9\nextjs-prisma-crud> npx prisma init --datasource-provider sqlite
+
+
+con esos comandos se creara un folder prisma(todo relacionado a prisma) en la ruta base y un file .env
+ojo : tambien crea el src\generated 
+
+
+ > 2----
+  una vez creado tus modelos en el file > prisma\schema.prisma ---OJO EDITAR AHI TU MODELO DE TU TABLA
+
+  con esto instala un modulo para q sea accesible desde el codigo
+    > npx prisma migrate dev --name init
+
+  ademas esto crea dentro del folder > prisma > 
+     dev.db : donde estas todos los datos q haras osea es tu bd.
+            para interactuar con la bd con una interfaz
+           con la extension  SQLite Viewer > dale click derecho > open with > elige eso SQLite Viewer  (aunque es de paga creo)
+           otra forma es abriendo una terminal en un puerto osea como una web , abre en la terminal el localhost de esa interfaz de bd
+            PS C:\Users\jesus\Desktop\JESUS\NEXT.JS\FAZT\9\nextjs-prisma-crud> npx prisma studio
+            
+     prisma\migrations : ahi se pone todas las modificaciones de tu bd
+
+
+   >3 ----
+    conectando a la bd usando Prisma Client
+      crea un folder y 1 file 
+      C:\Users\jesus\Desktop\JESUS\NEXT.JS\FAZT\9\nextjs-prisma-crud\src\libs
+
+
+ ojo : en extensiones instalar prisma de prisma.io 
+       tambien instalar  > SQLite Viewer
+  
+
+
+
+
+3. 
+  estructura
+
+  src\app : base de mi app
+      src\app\api\tasks : folder de endpoints osea el backend
+      los demas folder son las paginas
+  src\components : componentes reutilizables
+  src\libs : puente para usar el cliente
+
+
+
+
+
+4.
+  despliegue en versel 
+  recordar q vercel creo next.js por lo tanto se puede desplegar ahi
+
+  > eliminar 
+    C:\Users\jesus\Desktop\JESUS\NEXT.JS\FAZT\10\nextjs-prisma-crud\prisma\migrations
+    C:\Users\jesus\Desktop\JESUS\NEXT.JS\FAZT\10\nextjs-prisma-crud\prisma\dev.db
+
+
+  >   C:\Users\jesus\Desktop\JESUS\NEXT.JS\FAZT\10\nextjs-prisma-crud\prisma\schema.prisma
+    modificamos el datasource db
+
+
+  > logueate con vercel usando tu github , investiga como hacerlo a veces es un poco dificil 
+   https://vercel.com/login
+     
+       > una vez ingresado en el dashboard de vercel 
+         lado izquiero icono vercel > en el navbar > storage selecciona eso
+
+       > luego selecciona  prisma con Postgres > pon name > nextjs(puse ese)
+
+       >en la parte de Quickstart
+         >copia el .env.local y ponlo en .env de tu proyecto
+         > luego en la parte de define prisma schema > copia el datasource db y ponlo en tu schema.prisma
+
+       > leyendo la documentacion  ,osea con eso estamos migrando del sqllite a Postgresql y subiendo la bd a la nube de vercel
+        https://www.prisma.io/docs/guides/nextjs  
+         > en la terminal > poner  > npx prisma migrate dev
+         > dale un nombre >  o pon init > y listo 
+
+       >  ingresa de nuevo al dashboard de vercel (panel genernal)  > storage > prisma con Postgres > en la parte de arriba >    open in prisma    > en ese dashboard > en studio ve tu tabla 
+
+       > en tu package.json , agrega ese script
+            "postinstall": "prisma generate"   
+
+       > en la terminal pon   > npx prisma generate
+
+       > corre tu app de local y registra luego en el dashboard del prisma con Postgresql > en la parte open in prisma 
+          > en studio ahi veras tus datos 
+
+         PARTE IMPORTANTE SUBIENDO O DEPLOYANDO A VERCEL(solo codigo nada de bd , obviamente el backend tambien)
+       > en la terminal > poner > npm i vercel -g
+         para usar el cli de vercel en la terminal . documentacion (https://vercel.com/docs/deployments)
+            > vercel login --- poner eso en la terminal
+            > con eso logeate con github
+            >en la terminal pon > vercel 
+               con lo deploya
+            > Set up and deploy “~\Desktop\JESUS\NEXT.JS\FAZT\10\nextjs-prisma-crud”? yes
+            > Which scope should contain your project? jesus' project
+            > Link to existing project? no  --poner no
+            > What’s your project’s name? nextjs-prisma-crud  -- poner nombre
+            > In which directory is your code located? ./   -- poner default
+            >  Want to modify these settings? (y/N)  --- poner n
+            > Want to use the default Deployment Protection settings? (Vercel Authentication: Standard Protection) yes
+        > ahora para ver > entra al panel general de vercel ya sea en overviw o deployments    
+            > selecciona tu proyecto 
+            > en Deployment Details > en build logs veras la terminal 
+            > en visit > veras el deploy
+        > modificar el src\app\page.jsx
+          agregamos el export const dynamic = 'force-dynamic'; 
+          para actualizar o sea esto desabilita la memoria en cache 
+        > como ya deployamos y hemos modificado codigo debos hacer un nuevo deploy asi funcional vercel 
+          cada deploy es individual 
+           en la terminal poner > vercel ---- nada mas 
+              > vercel
+   
+
+
+
+5. 
+ credenciales de vercel 
+  es usando github
