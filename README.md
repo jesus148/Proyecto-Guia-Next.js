@@ -8,5 +8,5 @@ Ejemplo de Proyecto guia usando Next.js y prisma con base de datos.
 
 Ruta :
 
-https://nextjs-prisma-crud-jesus148-jesus-projects-1fe3b687.vercel.app/
+https://nextjs-prisma-crud-pi-ruddy.vercel.app/
 
